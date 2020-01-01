@@ -1,12 +1,5 @@
 name: tests
-on:
-  # trigger workflow on push and pull requests on the master branch
-  push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
+on: ["push", "pull_request"]
 
 jobs:
   test:
