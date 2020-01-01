@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestApplyCloudFlareByPass(t *testing.T) {
+func TestApplyCloudFlareByPassDefaultClient(t *testing.T) {
 	client := http.DefaultClient
 
 	res, err := client.Get("https://www.patreon.com/login")
@@ -18,6 +18,20 @@ func TestApplyCloudFlareByPass(t *testing.T) {
 	http.DefaultClient.Transport = AddCloudFlareByPass(http.DefaultClient.Transport)
 
 	res, err = client.Get("https://www.patreon.com/login")
+	assert.New(t).NoError(err)
+	assert.New(t).Equal(200, res.StatusCode)
+}
+
+func TestApplyCloudFlareByPassDefinedTransport(t *testing.T) {
+	client := &http.Client{
+		Transport: &http.Transport{},
+	}
+
+	// if the client requests something before applying the fix some configurations are applied already
+	// and our ByPass won't work anymore, so we have to apply our ByPass as the first thing
+	client.Transport = AddCloudFlareByPass(client.Transport)
+
+	res, err := client.Get("https://www.patreon.com/login")
 	assert.New(t).NoError(err)
 	assert.New(t).Equal(200, res.StatusCode)
 }
