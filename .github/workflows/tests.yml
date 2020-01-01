@@ -1,5 +1,14 @@
 name: tests
-on: ["push", "pull_request"]
+on:
+  push:
+    paths:
+      - '**.go'
+  pull_request:
+    paths:
+      - '**.go'
+  schedule:
+    # run tests regularly at 3 AM every days to check if CloudFlare updated their detection
+    - cron: '* 3 * * *'
 
 jobs:
   test:
