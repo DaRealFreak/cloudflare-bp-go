@@ -7,6 +7,11 @@ on:
     paths:
       - '**.go'
 
+env:
+  PROXY_HOST: ${{ secrets.PROXY_HOST }}
+  PROXY_USER: ${{ secrets.PROXY_USER }}
+  PROXY_PASS: ${{ secrets.PROXY_PASS }}
+
 jobs:
   coverage:
     runs-on: ubuntu-latest
