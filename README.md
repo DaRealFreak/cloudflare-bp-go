@@ -6,6 +6,8 @@ It'll add required/validated headers on requests and update the client TLS confi
 
 This is (at least so far) **NOT** intended to solve challenges provided by CloudFlare, only to prevent CloudFlare from directly displaying you a challenge on the first request.
 
+The bypass is tested on a schedule everyday at 3 AM in case CloudFlare updated their detection, so the badge is always displaying if the bypass still works.
+
 ## Dependencies
 - [eddycjy/fake-useragent](https://github.com/EDDYCJY/fake-useragent) - for setting a believable request user agent.
 CloudFlare is relatively forgiving with the user agents anyways but it'll add some variety for the long term.
