@@ -8,7 +8,7 @@ on:
       - '**.go'
   schedule:
     # run tests regularly at 3 AM every days to check if CloudFlare updated their detection
-    - cron: '* 3 * * *'
+    - cron: '0 3 * * *'
 
 env:
   PROXY_HOST: ${{ secrets.PROXY_HOST }}
