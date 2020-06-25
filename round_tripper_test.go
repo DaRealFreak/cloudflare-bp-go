@@ -1,7 +1,9 @@
 package cloudflarebp
 
 import (
+	"context"
 	"fmt"
+	"net"
 	"net/http"
 	"net/url"
 	"os"
@@ -55,8 +57,12 @@ func TestAddCloudFlareByPassSocksProxy(t *testing.T) {
 	)
 	assert.New(t).NoError(err)
 
+	dc := dialer.(interface {
+		DialContext(ctx context.Context, network, addr string) (net.Conn, error)
+	})
+
 	client := &http.Client{
-		Transport: &http.Transport{Dial: dialer.Dial},
+		Transport: &http.Transport{DialContext: dc.DialContext},
 	}
 
 	// if the client requests something before applying the fix some configurations are applied already
