@@ -53,7 +53,7 @@ func TestAddCloudFlareByPassSocksProxy(t *testing.T) {
 
 	dialer, err := proxy.SOCKS5(
 		"tcp",
-		fmt.Sprintf("%s:1080", os.Getenv("PROXY_HOST")),
+		fmt.Sprintf("%s:1080", os.Getenv("PROXY_HOST_SOCKS5")),
 		&auth,
 		proxy.Direct,
 	)
@@ -80,9 +80,9 @@ func TestAddCloudFlareByPassSocksProxy(t *testing.T) {
 func TestAddCloudFlareByPassHTTPProxy(t *testing.T) {
 	proxyURL, _ := url.Parse(
 		fmt.Sprintf(
-			"http://%s:%s@%s:80",
+			"https://%s:%s@%s:%s",
 			url.QueryEscape(os.Getenv("PROXY_USER")), url.QueryEscape(os.Getenv("PROXY_PASS")),
-			url.QueryEscape(os.Getenv("PROXY_HOST")),
+			url.QueryEscape(os.Getenv("PROXY_HOST_HTTPS")), url.QueryEscape(os.Getenv("PROXY_PORT_HTTPS")),
 		),
 	)
 
