@@ -60,7 +60,7 @@ func (ug *cloudFlareRoundTripper) RoundTrip(r *http.Request) (*http.Response, er
 // in case the configuration needs to be updated later on: https://wiki.mozilla.org/Security/Server_Side_TLS .
 func getCloudFlareTLSConfiguration() *tls.Config {
 	return &tls.Config{
-		PreferServerCipherSuites: true,
+		PreferServerCipherSuites: false,
 		CurvePreferences:         []tls.CurveID{tls.CurveP256, tls.CurveP384, tls.CurveP521, tls.X25519},
 	}
 }
