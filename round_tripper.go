@@ -10,14 +10,14 @@ import (
 	browser "github.com/EDDYCJY/fake-useragent"
 )
 
-// cloudFlareRoundTripper is a custom round tripper add the validated request headers
+// cloudFlareRoundTripper is a custom round tripper add the validated request headers.
 type cloudFlareRoundTripper struct {
 	inner     http.RoundTripper
 	userAgent string
 }
 
 // AddCloudFlareByPass returns a round tripper adding the required headers for the CloudFlare checks
-// and updates the TLS configuration of the passed inner transport
+// and updates the TLS configuration of the passed inner transport.
 func AddCloudFlareByPass(inner http.RoundTripper) http.RoundTripper {
 	if trans, ok := inner.(*http.Transport); ok {
 		trans.TLSClientConfig = getCloudFlareTLSConfiguration()
@@ -29,7 +29,7 @@ func AddCloudFlareByPass(inner http.RoundTripper) http.RoundTripper {
 	}
 }
 
-// RoundTrip adds the required request headers to pass CloudFlare checks
+// RoundTrip adds the required request headers to pass CloudFlare checks.
 func (ug *cloudFlareRoundTripper) RoundTrip(r *http.Request) (*http.Response, error) {
 	r.Header.Set("Accept-Language", "en-US,en;q=0.5")
 	// Accept-Encoding header not needed here since the http library will add gzip automatically if not set manually
@@ -52,7 +52,7 @@ func (ug *cloudFlareRoundTripper) RoundTrip(r *http.Request) (*http.Response, er
 }
 
 // getCloudFlareTLSConfiguration returns an accepted client TLS configuration to not get detected by CloudFlare directly
-// in case the configuration needs to be updated later on: https://wiki.mozilla.org/Security/Server_Side_TLS
+// in case the configuration needs to be updated later on: https://wiki.mozilla.org/Security/Server_Side_TLS .
 func getCloudFlareTLSConfiguration() *tls.Config {
 	return &tls.Config{
 		PreferServerCipherSuites: true,

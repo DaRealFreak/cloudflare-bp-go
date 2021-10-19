@@ -8,7 +8,7 @@ on:
       - '**.go'
   schedule:
     # run tests regularly at 3 AM every days to check if CloudFlare updated their detection
-    - cron: '* 3 * * *'
+    - cron: '0 3 * * *'
 
 env:
   PROXY_HOST: ${{ secrets.PROXY_HOST }}
@@ -19,7 +19,7 @@ jobs:
   test:
     strategy:
       matrix:
-        go-version: [1.12.x, 1.13.x]
+        go-version: [1.12.x, 1.13.x, 1.14.x, 1.15.x]
         platform: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.platform }}
     steps:

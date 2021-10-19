@@ -1,5 +1,8 @@
 # Go CloudFlare ByPass
-![tests](https://github.com/DaRealFreak/cloudflare-bp-go/workflows/tests/badge.svg?branch=master) [![Coverage Status](https://coveralls.io/repos/github/DaRealFreak/cloudflare-bp-go/badge.svg?branch=master)](https://coveralls.io/github/DaRealFreak/cloudflare-bp-go?branch=master) ![GitHub](https://img.shields.io/github/license/DaRealFreak/cloudflare-bp-go) [![Go Report Card](https://goreportcard.com/badge/github.com/DaRealFreak/cloudflare-bp-go)](https://goreportcard.com/report/github.com/DaRealFreak/cloudflare-bp-go)
+![tests](https://github.com/DaRealFreak/cloudflare-bp-go/workflows/tests/badge.svg?branch=master) 
+[![Coverage Status](https://coveralls.io/repos/github/DaRealFreak/cloudflare-bp-go/badge.svg?branch=master)](https://coveralls.io/github/DaRealFreak/cloudflare-bp-go?branch=master)
+![GitHub](https://img.shields.io/github/license/DaRealFreak/cloudflare-bp-go)
+[![Go Report Card](https://goreportcard.com/badge/github.com/DaRealFreak/cloudflare-bp-go)](https://goreportcard.com/report/github.com/DaRealFreak/cloudflare-bp-go)
 
 small round tripper to avoid triggering the "attention required" status of CloudFlare for HTTP requests.
 It'll add required/validated headers on requests and update the client TLS configuration to pass the CloudFlare validation.
