@@ -3,9 +3,13 @@ on:
   push:
     paths:
       - '**.go'
+      - '**.mod'
+      - '**.sum'
   pull_request:
     paths:
       - '**.go'
+      - '**.mod'
+      - '**.sum'
 
 env:
   PROXY_HOST: ${{ secrets.PROXY_HOST }}
