@@ -15,6 +15,9 @@ env:
   PROXY_HOST: ${{ secrets.PROXY_HOST }}
   PROXY_USER: ${{ secrets.PROXY_USER }}
   PROXY_PASS: ${{ secrets.PROXY_PASS }}
+  PROXY_HOST_HTTPS: ${{ secrets.PROXY_HOST_HTTPS }}
+  PROXY_PORT_HTTPS: ${{ secrets.PROXY_PORT_HTTPS }}
+  PROXY_HOST_SOCKS5: ${{ secrets.PROXY_HOST_SOCKS5 }}
 
 jobs:
   coverage:
