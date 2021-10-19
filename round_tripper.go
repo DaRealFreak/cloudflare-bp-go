@@ -35,7 +35,11 @@ func (ug *cloudFlareRoundTripper) RoundTrip(r *http.Request) (*http.Response, er
 	// Accept-Encoding header not needed here since the http library will add gzip automatically if not set manually
 	// would be required for porting this for other libraries
 	r.Header.Set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
-	r.Header.Set("User-Agent", ug.userAgent)
+
+	// only use fake user agent if no custom user agent is defined already
+	if r.Header.Get("User-Agent") == "" {
+		r.Header.Set("User-Agent", ug.userAgent)
+	}
 
 	// in case we don't have an inner transport layer from the round tripper
 	if ug.inner == nil {
