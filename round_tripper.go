@@ -36,9 +36,12 @@ func (ug *cloudFlareRoundTripper) RoundTrip(r *http.Request) (*http.Response, er
 	}
 
 	if r.Header.Get("Accept") == "" {
-		// Accept-Encoding header not needed here since the http library will add gzip automatically if not set manually
-		// would be required for porting this for other libraries
 		r.Header.Set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
+	}
+
+	if r.Header.Get("Accept-Encoding") == "" {
+		// Accept-Encoding header needed here since CloudFlare will often return 403 if the client doesn't accept gzip compressed responses
+		r.Header.Set("Accept-Encoding", "gzip, deflate, br")
 	}
 
 	// only use fake user agent if no custom user agent is defined already
@@ -60,7 +63,6 @@ func (ug *cloudFlareRoundTripper) RoundTrip(r *http.Request) (*http.Response, er
 // in case the configuration needs to be updated later on: https://wiki.mozilla.org/Security/Server_Side_TLS .
 func getCloudFlareTLSConfiguration() *tls.Config {
 	return &tls.Config{
-		PreferServerCipherSuites: false,
-		CurvePreferences:         []tls.CurveID{tls.CurveP256, tls.CurveP384, tls.CurveP521, tls.X25519},
+		CurvePreferences: []tls.CurveID{tls.CurveP256, tls.CurveP384, tls.CurveP521, tls.X25519},
 	}
 }
