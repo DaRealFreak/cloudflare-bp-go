@@ -5,48 +5,50 @@ package cloudflarebp
 
 import (
 	"crypto/tls"
-	"net/http"
-
 	browser "github.com/EDDYCJY/fake-useragent"
+	"net/http"
 )
 
 // cloudFlareRoundTripper is a custom round tripper add the validated request headers.
 type cloudFlareRoundTripper struct {
-	inner     http.RoundTripper
-	userAgent string
+	inner   http.RoundTripper
+	options Options
+}
+
+// Options the option to set custom headers
+type Options struct {
+	AddMissingHeaders bool
+	Headers           map[string]string
 }
 
 // AddCloudFlareByPass returns a round tripper adding the required headers for the CloudFlare checks
 // and updates the TLS configuration of the passed inner transport.
-func AddCloudFlareByPass(inner http.RoundTripper) http.RoundTripper {
+func AddCloudFlareByPass(inner http.RoundTripper, options ...Options) http.RoundTripper {
 	if trans, ok := inner.(*http.Transport); ok {
 		trans.TLSClientConfig = getCloudFlareTLSConfiguration()
 	}
 
-	return &cloudFlareRoundTripper{
-		inner:     inner,
-		userAgent: browser.Firefox(),
+	roundTripper := &cloudFlareRoundTripper{
+		inner: inner,
 	}
+
+	if options != nil {
+		roundTripper.options = options[0]
+	} else {
+		roundTripper.options = GetDefaultOptions()
+	}
+
+	return roundTripper
 }
 
 // RoundTrip adds the required request headers to pass CloudFlare checks.
 func (ug *cloudFlareRoundTripper) RoundTrip(r *http.Request) (*http.Response, error) {
-	if _, ok := r.Header["Accept-Language"]; !ok {
-		r.Header.Set("Accept-Language", "en-US,en;q=0.5")
-	}
-
-	if _, ok := r.Header["Accept"]; !ok {
-		r.Header.Set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
-	}
-
-	if _, ok := r.Header["Accept-Encoding"]; !ok {
-		// Accept-Encoding header needed here since CloudFlare will often return 403 if the client doesn't accept gzip compressed responses
-		r.Header.Set("Accept-Encoding", "gzip, deflate, br")
-	}
-
-	// only use fake user agent if no custom user agent is defined already
-	if _, ok := r.Header["User-Agent"]; !ok {
-		r.Header.Set("User-Agent", ug.userAgent)
+	if ug.options.AddMissingHeaders {
+		for header, value := range ug.options.Headers {
+			if _, ok := r.Header[header]; !ok {
+				r.Header.Set(header, value)
+			}
+		}
 	}
 
 	// in case we don't have an inner transport layer from the round tripper
@@ -64,5 +66,17 @@ func (ug *cloudFlareRoundTripper) RoundTrip(r *http.Request) (*http.Response, er
 func getCloudFlareTLSConfiguration() *tls.Config {
 	return &tls.Config{
 		CurvePreferences: []tls.CurveID{tls.CurveP256, tls.CurveP384, tls.CurveP521, tls.X25519},
+	}
+}
+
+// GetDefaultOptions returns the options set by default
+func GetDefaultOptions() Options {
+	return Options{
+		AddMissingHeaders: true,
+		Headers: map[string]string{
+			"Accept":          "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+			"Accept-Language": "en-US,en;q=0.5",
+			"User-Agent":      browser.Firefox(),
+		},
 	}
 }

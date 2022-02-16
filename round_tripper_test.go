@@ -90,11 +90,15 @@ func TestAddCloudFlareByPassHTTPProxy(t *testing.T) {
 		Transport: &http.Transport{Proxy: http.ProxyURL(proxyURL)},
 	}
 
+	res, err := client.Get("https://www.patreon.com/login")
+	assert.New(t).NoError(err)
+	assert.New(t).Equal(403, res.StatusCode)
+
 	// if the client requests something before applying the fix some configurations are applied already
 	// and our ByPass won't work anymore, so we have to apply our ByPass as the first thing
 	client.Transport = cloudflarebp.AddCloudFlareByPass(client.Transport)
 
-	res, err := client.Get("https://www.patreon.com/login")
+	res, err = client.Get("https://www.patreon.com/login")
 	assert.New(t).NoError(err)
 	assert.New(t).Equal(200, res.StatusCode)
 }
