@@ -31,21 +31,21 @@ func AddCloudFlareByPass(inner http.RoundTripper) http.RoundTripper {
 
 // RoundTrip adds the required request headers to pass CloudFlare checks.
 func (ug *cloudFlareRoundTripper) RoundTrip(r *http.Request) (*http.Response, error) {
-	if r.Header.Get("Accept-Language") == "" {
+	if _, ok := r.Header["Accept-Language"]; !ok {
 		r.Header.Set("Accept-Language", "en-US,en;q=0.5")
 	}
 
-	if r.Header.Get("Accept") == "" {
+	if _, ok := r.Header["Accept"]; !ok {
 		r.Header.Set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
 	}
 
-	if r.Header.Get("Accept-Encoding") == "" {
+	if _, ok := r.Header["Accept-Encoding"]; !ok {
 		// Accept-Encoding header needed here since CloudFlare will often return 403 if the client doesn't accept gzip compressed responses
 		r.Header.Set("Accept-Encoding", "gzip, deflate, br")
 	}
 
 	// only use fake user agent if no custom user agent is defined already
-	if r.Header.Get("User-Agent") == "" {
+	if _, ok := r.Header["User-Agent"]; !ok {
 		r.Header.Set("User-Agent", ug.userAgent)
 	}
 
